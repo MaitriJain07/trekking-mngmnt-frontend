@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+<div class="auth-wrap reveal">
+  <div class="auth-art"><span>SAFARNAMA / YOUR JOURNEY</span><blockquote>Every trail has a beginning. Welcome back.</blockquote></div>
+  <div class="auth-content">
+    <p class="eyebrow">Your journey awaits</p><h1>Welcome back.</h1><p>Log in to pick up where your adventure left off.</p>
+    <form method="POST">
+      <div class="mb-3"><label for="login-email">Email address</label><input id="login-email" type="email" name="email" class="form-control" autocomplete="email" required></div>
+      <div class="mb-3"><label for="login-password">Password</label><input id="login-password" type="password" name="password" class="form-control" autocomplete="current-password" required></div>
+      <button type="submit" class="btn btn-primary w-100">Log in <span aria-hidden="true">↗</span></button>
+    </form>
+    <p class="auth-switch">New to Safarnama? <a href="{{ url_for('main.register') }}">Create an account</a></p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-heading reveal">
+    <h5 class="text-teal-dark m-0">Create Trek</h5>
+    <a class="btn text-teal-muted me-4" href="{{ url_for('main.admin_dashboard') }}">← Back to Dashboard</a>
+</div>
+            <div class="form-panel reveal">
+<form method="POST">
+                <div class="mb-3">
+                    <label class="text-teal-dark">Name</label>
+                    <input type="text" name="name" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="text-teal-dark">Location</label>
+                    <input type="text" name="location" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="text-teal-dark">Start Date</label>
+                    <input type="date" name="start_date" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="text-teal-dark">End Date</label>
+                    <input type="date" name="end_date" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="text-teal-dark">Difficulty</label>
+                    <select name="difficulty" class="form-control" required>
+                        <option value="easy">Easy</option>
+                        <option value="moderate">Moderate</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="text-teal-dark">Status</label>
+                    <select name="status" class="form-control" required>
+                        <option value="pending">Pending (Not Open For Booking Yet)</option>
+                        <option value="open">Open (Bookable Immediately)</option>
+                    </select>
+                </div>                
+                <div class="mb-3">
+                    <label class="text-teal-dark">Assign Guide</label>
+                    <select name="assigned_staff_id" class="form-control">
+                        <option value="">Not Assigned</option>
+                        {% for staff in staff_list %}
+                        <option value="{{ staff.id }}">{{ staff.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="text-teal-dark">Total Slots</label>
+                    <input type="number" name="total_slots" class="form-control" required min="1">
+                </div>
+                <div class="mb-3">
+                    <label class="text-teal-dark">Description</label>
+                    <textarea name="description" class="form-control" rows="4"></textarea>
+                </div>
+                <button type="submit" class="bg-teal-muted text-center text-offwhite btn w-100 mb-3">Create Trek</button>
+            </form>
+</div>
+{% endblock %}

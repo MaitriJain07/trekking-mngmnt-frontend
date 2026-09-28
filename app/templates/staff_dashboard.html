@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Welcome Header -->
+<div class="mb-4 dashboard-intro reveal">
+    <div class="section-bar">
+        <h3 class="text-teal-dark m-0">Hello, Guide {{ guide_name }}</h3>
+    </div>
+    <p class="text-teal-muted mb-0">Welcome back to Safarnama. Here's what's happening today.</p>
+</div>
+<!-- guide stats -->
+<div class="row stat-grid">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body bg-sage rounded">
+                <h5 class="card-title text-teal-dark">Active Treks</h5>
+                <p class="card-text fs-3 text-teal-dark">{{ active_treks }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body bg-sage rounded">
+                <h5 class="card-title text-teal-dark">Total Participants</h5>
+                <p class="card-text fs-3 text-teal-dark">{{ total_participants }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body bg-sage rounded">
+                <h5 class="card-title text-teal-dark">Total Assigned Treks</h5>
+                <p class="card-text fs-3 text-teal-dark">{{ total_assigned_treks }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body bg-sage rounded">
+                <h5 class="card-title text-teal-dark">Completed Treks</h5>
+                <p class="card-text fs-3 text-teal-dark">{{ completed_treks }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions for Staff -->
+<div class="row mt-4 mb-4 action-grid">
+    <div class="col-md-6 mb-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body bg-ice rounded">
+                <h5 class="card-title text-teal-dark">My Assigned Treks</h5>
+                <p class="card-text text-teal-dark small">Manage your treks, update slots, or view participants</p>
+                <a href="{{ url_for("main.all_assigned_treks") }}" class="btn bg-teal-dark text-offwhite btn-sm">View My Treks</a>
+                <a href="{{ url_for('main.staffs_cancelled_treks') }}" class="btn text-teal-dark bg-offwhite btn-sm">View Cancelled</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body bg-ice rounded">
+                <h5 class="card-title text-teal-dark">My Profile</h5>
+                <p class="card-text text-teal-dark small">Update your contact details and experience</p>
+                <a href="{{ url_for('main.update_staff_profile') }}" class="btn bg-teal-dark text-offwhite btn-sm">Edit Profile</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section-bar">
+    <h5 class="text-teal-dark m-0">All Active Treks</h5>
+    <a class="text-teal-muted" href="{{ url_for('main.all_assigned_treks') }}">View All Assigned Treks →</a>
+</div>
+
+<form method="GET" class="filter-form">
+    <input type="text" name="search" placeholder="Search by Trek name.." class="form-control text-teal-muted bg-offwhite" value="{{ request.args.get('search','') }}">
+</form>
+<div class="table-responsive" tabindex="0" role="region" aria-label="Scrollable table of records">
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th class="text-teal-dark">Trek Id</th>
+            <th class="text-teal-dark">Trek Name</th>
+            <th class="text-teal-dark">Location</th>
+            <th class="text-teal-dark">Start Date</th>
+            <th class="text-teal-dark">End Date</th>
+            <th class="text-teal-dark">Duration</th>
+            <th class="text-teal-dark">Difficulty</th>
+            <th class="text-teal-dark">Trek Status</th>
+            <th class="text-teal-dark">Available Slots</th>
+            <th class="text-teal-dark">Total Slots</th>
+            <th class="text-teal-dark">Total Participants</th>
+            <th class="text-teal-dark">Modify</th>
+        <!-- <th class="text-teal-dark">Trek Description</th> -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for trek in all_active_treks %}
+        <tr>
+            <td class="text-teal-dark">{{ trek.id }}</td>
+            <td class="text-teal-dark">{{ trek.name }}</td>
+            <td class="text-teal-dark">{{ trek.location }}</td>
+            <td class="text-teal-dark">{{ trek.start_date.strftime('%d %b %Y') }}</td>
+            <td class="text-teal-dark">{{ trek.end_date.strftime('%d %b %Y') }}</td>
+            <td class="text-teal-dark">{{ trek.duration }}</td>
+            <td class="text-teal-dark">{{ trek.difficulty }}</td>
+            <td class="text-teal-dark">{{ trek.status }}</td>
+            <td class="text-teal-dark">{{ trek.available_slots }}</td>
+            <td class="text-teal-dark">{{ trek.total_slots }}</td>
+            <td class="text-teal-dark">{{ trek.total_slots-trek.available_slots }}</td>
+            <td><a class="text-teal-muted" href="{{ url_for("main.staff_manage_trek",trek_id=trek.id) }}" aria-label="Edit trek">✎</a></td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="12" class="text-center text-teal-dark">No Treks yet!</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+<p class="table-hint">Swipe sideways to see all columns →</p>
+{% endblock %}

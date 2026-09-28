@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="mb-4 dashboard-intro reveal">
+    <h3 class="text-teal-dark m-0">Hello {{ user.name }}</h3>
+    <p class="text-teal-muted mb-0">Welcome back to Safarnama. Here's what's happening today.</p>
+</div>
+<!-- Quick Actions for Trekkers -->
+<div class="row mt-4 mb-4 action-grid">
+    <div class="col-md-4 mb-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body bg-ice rounded">
+                <h5 class="card-title text-teal-dark">Browse Treks</h5>
+                <p class="card-text text-teal-dark small">View available treks and book your next adventure</p>
+                <a href="{{ url_for('main.browse_trek') }}" class="btn bg-teal-dark text-offwhite btn-sm">Browse All Treks</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body bg-ice rounded">
+                <h5 class="card-title text-teal-dark">My Bookings</h5>
+                <p class="card-text text-teal-dark small">View your active bookings and track trek status</p>
+                <a href="{{ url_for('main.booking_history') }}" class="btn bg-teal-dark text-offwhite btn-sm">View Bookings</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body bg-ice rounded">
+                <h5 class="card-title text-teal-dark">My History</h5>
+                <p class="card-text text-teal-dark small">View your cancelled and completed trek history</p>
+                <a href="{{ url_for('main.cancel_booking_history') }}" class="btn bg-teal-dark text-offwhite btn-sm me-2">Cancelled</a>
+                <a href="{{ url_for('main.completed_trek') }}" class="btn text-teal-dark bg-offwhite btn-sm">Completed</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section-bar">
+    <h5 class="text-teal-dark m-0">Upcoming Treks</h5>
+    <a class="text-teal-muted me-4" href="{{ url_for("main.browse_trek") }}">Browse All Treks</a>
+</div>
+
+<div class="table-responsive" tabindex="0" role="region" aria-label="Scrollable table of records">
+<table class="table table-hover table-sm">
+    <thead>
+        <tr>
+            <th class="text-teal-dark">Trek Id</th>
+            <th class="text-teal-dark">Trek Name</th>
+            <th class="text-teal-dark">Location</th>
+            <th class="text-teal-dark">Start Date</th>
+            <th class="text-teal-dark">End Date</th>
+            <th class="text-teal-dark">Duration</th>
+            <th class="text-teal-dark">Difficulty</th>
+            <th class="text-teal-dark">Available Slots</th>
+            <th class="text-teal-dark">Assigned Guide</th>
+            <th class="text-teal-dark">Total Participants</th>
+            <th class="text-teal-dark">Book</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for trek in browse_treks %}
+        <tr>
+            <td class="text-teal-dark">{{ trek.id }}</td>
+            <td class="text-teal-dark">{{ trek.name }}</td>
+            <td class="text-teal-dark">{{ trek.location }}</td>
+            <td class="text-teal-dark">{{ trek.start_date.strftime('%d %b %Y') }}</td>
+            <td class="text-teal-dark">{{ trek.end_date.strftime('%d %b %Y') }}</td>
+            <td class="text-teal-dark">{{ trek.duration }}</td>
+            <td class="text-teal-dark">{{ trek.difficulty }}</td>
+            <td class="text-teal-dark">{{ trek.available_slots }}</td>
+            <td class="text-teal-dark">{{ trek.assigned_staff.name if trek.assigned_staff else 'Not assigned'}}</td>
+            <td class="text-teal-dark">{{ trek.total_slots-trek.available_slots }}</td>
+            <td><form action="{{ url_for('main.book_trek',trek_id=trek.id) }}" 
+                    method="POST" 
+                    style="display:inline;"
+                    onsubmit="return confirm('Are you sure you want to book this trek?');">
+                    <button type="submit" class="btn bg-sage" style="text-decoration:none;">Book</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="11" class="text-center text-teal-dark">No Treks yet!</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+<p class="table-hint">Swipe sideways to see all columns →</p>
+<!-- recent bookings -->
+ <div class="section-bar">
+    <h5 class="text-teal-dark m-0">Recent Booked Treks</h5>
+    <a class="text-teal-muted me-4" href="{{ url_for("main.booking_history") }}">All Bookings</a>
+</div>
+<div class="table-responsive" tabindex="0" role="region" aria-label="Scrollable table of records">
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th class="text-teal-dark">Booking Id</th>
+            <th class="text-teal-dark">Booking Date</th>
+            <th class="text-teal-dark">Trek Id</th>
+            <th class="text-teal-dark">Trek Name</th>
+            <th class="text-teal-dark">Location</th>
+            <th class="text-teal-dark">Start Date</th>
+            <th class="text-teal-dark">End Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for booking in my_recent_treks %}
+        <tr>
+            <td class="text-teal-dark">{{ booking.id }}</td>
+            <td class="text-teal-dark">{{ booking.booking_date.strftime('%d %b %Y') }}</td>
+            <td class="text-teal-dark">{{ booking.trek.id }}</td>
+            <td class="text-teal-dark">{{ booking.trek.name }}</td>
+            <td class="text-teal-dark">{{ booking.trek.location }}</td>
+            <td class="text-teal-dark">{{ booking.trek.start_date.strftime('%d %b %Y') }}</td>
+            <td class="text-teal-dark">{{ booking.trek.end_date.strftime('%d %b %Y') }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="7" class="text-center text-teal-dark">No Treks Booked yet!</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+<p class="table-hint">Swipe sideways to see all columns →</p>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-heading reveal">
+    <h1 class="display-4 text-teal-dark">{{ trek.name|capitalize }}</h1>
+    <a href="{{ url_for('main.browse_trek') }}" class="text-teal-muted">← Back to Browse</a>
+</div>
+
+<div class="detail-banner"><span>Find your next horizon.</span></div>
+<div class="card detail-card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Location:</strong> {{ trek.location }}</p>
+                <p><strong>Difficulty:</strong> {{ trek.difficulty|capitalize }}</p>
+                <p><strong>Start Date:</strong> {{ trek.start_date.strftime('%B %d, %Y') }}</p>
+                <p><strong>End Date:</strong> {{ trek.end_date.strftime('%B %d, %Y') }}</p>
+                <p><strong>Duration:</strong> {{ trek.duration }} days</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Available Slots:</strong> {{ trek.available_slots }} / {{ trek.total_slots }}</p>
+                <p><strong>Guide:</strong> {{ trek.assigned_staff.name if trek.assigned_staff else 'Not assigned yet' }}</p>
+                <p><strong>Status:</strong> 
+                    <span class="badge {% if trek.status == 'open' %}bg-success{% elif trek.status == 'closed' %}bg-warning{% elif trek.status == 'ongoing' %}bg-info{% elif trek.status == 'completed' %}bg-primary{% else %}bg-secondary{% endif %}">
+                        {{ trek.status|upper }}
+                    </span>
+                </p>
+            </div>
+        </div>
+        <div class="mt-3">
+            <h5>Description</h5>
+            <p class="text-muted">{{ trek.description or 'No description available.' }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    {% if already_booked %}
+        <div class="alert alert-info">
+            You have already booked this trek!
+        </div>
+    {% elif trek.available_slots>0 and trek.status=='open' %}
+        <form action="{{ url_for('main.book_trek', trek_id=trek.id) }}" method="POST">
+            <button type="submit" class="btn bg-sage btn-lg">Book Now - {{ trek.available_slots }} slots available</button>
+        </form>
+    {% elif trek.available_slots==0 %}
+        <div class="alert alert-danger">
+            This trek is fully booked!
+        </div>
+    {% else %}
+        <div class="alert alert-warning">
+            This trek is currently not open for booking.
+        </div>
+    {% endif %}
+</div>
+
+<div class="mt-2 text-muted">
+    <small>{{ trek.total_slots - trek.available_slots }} people have already booked this trek</small>
+</div>
+
+{% endblock %}

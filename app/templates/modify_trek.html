@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-6 form-panel reveal">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-teal-dark">Modify Trek</h2>
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="text-teal-dark">Name</label>
+                    <input type="text" name="name" class="form-control" value="{{ trek.name }}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="text-teal-dark">Location</label>
+                    <input type="text" name="location" class="form-control" value="{{ trek.location }}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="text-teal-dark">Start Date</label>
+                    <input type="date" name="start_date" class="form-control" value="{{ trek.start_date.strftime('%Y-%m-%d') }}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="text-teal-dark">End Date</label>
+                    <input type="date" name="end_date" class="form-control" value='{{ trek.end_date.strftime("%Y-%m-%d")}}' required>
+                </div>
+                <div class="mb-3">
+                    <label class="text-teal-dark">Difficulty</label>
+                    <select name="difficulty" class="form-control" required>
+                        <option value="easy" {% if trek.difficulty=='easy' %}selected{% endif %}>Easy</option>
+                        <option value="moderate" {% if trek.difficulty=='moderate' %}selected{% endif %}>Moderate</option>
+                        <option value="hard" {% if trek.difficulty=='hard' %}selected{% endif %}>Hard</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="text-teal-dark">Status</label>
+                    <select name="status" class="form-control" required>
+                        <option value="pending" {% if trek.status=='pending' %}selected{% endif %}>Pending (Not Open For Booking Yet)</option>
+                        <option value="open" {% if trek.status=='open' %}selected{% endif %}>Open (Bookable Immediately)</option>
+                    </select>
+                </div>                
+                <div class="mb-3">
+                    <label class="text-teal-dark">Assign Guide</label>
+                    <select name="assigned_staff_id" class="form-control">
+                        <option value="" {% if not trek.assigned_staff_id %}selected{% endif %}>Not Assigned</option>
+                        {% for staff in staff_list %}
+                        <option value="{{ staff.id }}" {% if trek.assigned_staff_id==staff.id %}selected{% endif %}>{{ staff.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="text-teal-dark">Total Slots</label>
+                    <input type="number" name="total_slots" class="form-control" value="{{ trek.total_slots }}" required min="1">
+                </div>
+                <div class="mb-3">
+                    <label class="text-teal-dark">Description</label>
+                    <textarea name="description" class="form-control" rows="4" >{{ trek.description }}</textarea>
+                </div>
+                <button type="submit" class="bg-teal-muted text-center text-offwhite btn w-100 mb-3">Modify Trek</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

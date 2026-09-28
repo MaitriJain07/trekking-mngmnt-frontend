@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#388087">
+  <title>{% block title %}Safarnama{% endblock %} · Trek journeys</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <nav class="site-nav container-xl" aria-label="Main navigation">
+      <a class="brand" href="{{ url_for('main.home') }}" aria-label="Safarnama home">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><path d="M3 29 15 12l7 10 5-7 10 14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 33h30" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span>
+        <span>Safarnama<span class="brand-dot">.</span></span>
+      </a>
+      <button class="menu-toggle" type="button" aria-controls="site-links" aria-expanded="false" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="site-links" id="site-links">
+        {% if session.user_id %}
+          {% if session['role'] == 'admin' %}
+            <a href="{{ url_for('main.admin_dashboard') }}">Overview</a>
+            <a href="{{ url_for('main.all_treks') }}">Treks</a>
+            <a href="{{ url_for('main.all_bookings') }}">Bookings</a>
+            <a href="{{ url_for('main.all_trekkers') }}">Trekkers</a>
+            <a href="{{ url_for('main.all_staffs') }}">Guides</a>
+          {% elif session['role'] == 'staff' %}
+            <a href="{{ url_for('main.staff_dashboard') }}">Overview</a>
+            <a href="{{ url_for('main.all_assigned_treks') }}">My treks</a>
+            <a href="{{ url_for('main.update_staff_profile') }}">My profile</a>
+          {% else %}
+            <a href="{{ url_for('main.trekker_dashboard') }}">Overview</a>
+            <a href="{{ url_for('main.browse_trek') }}">Explore treks</a>
+            <a href="{{ url_for('main.booking_history') }}">My bookings</a>
+          {% endif %}
+          <a class="nav-action nav-quiet" href="{{ url_for('main.logout') }}">Log out <span aria-hidden="true">↗</span></a>
+        {% else %}
+          <a href="{{ url_for('main.home') }}">Home</a>
+          <a href="{{ url_for('main.login') }}">Log in</a>
+          <a class="nav-action" href="{{ url_for('main.register') }}">Join the journey <span aria-hidden="true">↗</span></a>
+        {% endif %}
+      </div>
+    </nav>
+  </header>
+  <main class="site-main container-xl" id="main-content">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash-stack" role="status" aria-live="polite">
+        {% for message in messages %}<div class="alert flash-message">{{ message }}</div>{% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <div class="container-xl footer-inner">
+      <span class="footer-brand">Safarnama<span class="brand-dot">.</span></span>
+      <span>Made for the journeys that stay with you.</span>
+      <span class="footer-credit">A MAD1 project · IIT Madras BS Data Science</span>
+    </div>
+  </footer>
+  <script src="{{ url_for('static', filename='js/site.js') }}" defer></script>
+</body>
+</html>

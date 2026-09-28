@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-heading reveal">
+    <h5 class="text-teal-dark m-0">Browse Treks</h5>
+    <div>
+        <a class="text-teal-muted" href="{{ url_for('main.trekker_dashboard') }}">← Back to Dashboard</a>
+    </div>
+</div>
+<form method="GET" class="filter-form">
+    <input type="text" name="search" placeholder="Search by Trek name.." class="form-control text-teal-muted bg-offwhite me-3" value="{{ request.args.get('search','') }}">
+    <input type="text" name="difficulty" placeholder="Search by Trek difficulty.." class="form-control text-teal-muted bg-offwhite me-3" value="{{ request.args.get('difficulty','') }}">
+    <input type="text" name="location" placeholder="Search by Trek Location.." class="form-control text-teal-muted bg-offwhite me-3" value="{{ request.args.get('location',"") }}">
+    <button type="submit" class="btn bg-teal-dark text-offwhite">Filter</button>
+</form>
+
+<div class="table-responsive" tabindex="0" role="region" aria-label="Scrollable table of records">
+<table class="table table-hover table-sm">
+    <thead>
+        <tr>
+            <th class="text-teal-dark">#</th>
+            <th class="text-teal-dark">Trek Id</th>
+            <th class="text-teal-dark">Trek Name</th>
+            <th class="text-teal-dark">Location</th>
+            <th class="text-teal-dark">Start Date</th>
+            <th class="text-teal-dark">End Date</th>
+            <th class="text-teal-dark">Duration</th>
+            <th class="text-teal-dark">Difficulty</th>
+            <th class="text-teal-dark">Available Slots</th>
+            <th class="text-teal-dark">Assigned Guide</th>
+            <th class="text-teal-dark">Total Participants</th>
+            <th class="text-teal-dark">Book</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for trek in browse_treks %}
+        <tr>
+            <td class="text-teal-dark">{{ loop.index }}</td>
+            <td class="text-teal-dark">{{ trek.id }}</td>
+            <td><a class="text-teal-dark" href="{{ url_for('main.trek_detail', trek_id=trek.id) }}" 
+                class="text-decoration-none">{{ trek.name }}</a></td>
+            <td class="text-teal-dark">{{ trek.location }}</td>
+            <td class="text-teal-dark">{{ trek.start_date.strftime('%d %b %Y') }}</td>
+            <td class="text-teal-dark">{{ trek.end_date.strftime('%d %b %Y') }}</td>
+            <td class="text-teal-dark">{{ trek.duration }}</td>
+            <td class="text-teal-dark">{{ trek.difficulty }}</td>
+            <td class="text-teal-dark">{{ trek.available_slots }}</td>
+            <td class="text-teal-dark">{{ trek.assigned_staff.name if trek.assigned_staff else 'Not assigned'}}</td>
+            <td class="text-teal-dark">{{ trek.total_slots-trek.available_slots }}</td>
+            <td><form action="{{ url_for('main.book_trek', trek_id=trek.id) }}" 
+                    method="POST" 
+                    style="display:inline;"
+                    onsubmit="return confirm('Are you sure you want to Book this trek?');">
+                    <button type="submit" class="btn bg-sage" style="text-decoration:none;">Book</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="12" class="text-center text-teal-dark">No Treks yet!</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+<p class="table-hint">Swipe sideways to see all columns →</p>
+{% endblock %}

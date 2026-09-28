@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-heading reveal">
+    <h5 class="text-teal-dark m-0">All Trekkers</h5>
+    <div>
+        <a class="text-teal-muted me-3" href="{{ url_for('main.blacklisted_trekkers') }}">← View Blacklisted Trekkers</a>  
+        <a class="text-teal-muted" href="{{ url_for('main.admin_dashboard') }}">← Back to Dashboard</a>
+    </div>
+</div>
+
+<form method="GET" class="filter-form">
+    <input type="text" name="search" placeholder="Search by User name.." class="form-control text-teal-muted bg-offwhite" value="{{ request.args.get('search','') }}">
+</form>
+<div class="table-responsive" tabindex="0" role="region" aria-label="Scrollable table of records">
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th class="text-teal-dark">#</th>
+            <th class="text-teal-dark">Trekker Id</th>
+            <th class="text-teal-dark">Trekker Name</th>
+            <th class="text-teal-dark">Email</th>
+            <th class="text-teal-dark">Blacklist</th>
+            <th class="text-teal-dark">Booking History</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in trekker_list %}
+        <tr>
+            <td class="text-teal-dark">{{ loop.index }}</td>
+            <td class="text-teal-dark">{{ user.id }}</td>
+            <td class="text-teal-dark">{{ user.name }}</td>
+            <td class="text-teal-dark">{{ user.email }}</td>
+            <td class="text-teal-dark">
+                <form action="{{ url_for("main.blacklist_trekker",user_id=user.id) }}" 
+                    method="POST" 
+                    style="display:inline;"
+                    onsubmit="return confirm('Are you sure you want to blacklist this trekker?');">
+                    <button type="submit" class="btn btn-link text-danger p-0 m-0" style="text-decoration:none;" aria-label="Remove or blacklist">🗙</button>
+                </form>
+            </td>
+            <td class="text-teal-dark">
+                <a href="{{ url_for('main.trekker_history', user_id=user.id) }}">History</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6" class="text-center text-teal-dark">No Trekkers yet!</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+<p class="table-hint">Swipe sideways to see all columns →</p>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-6 form-panel reveal">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-teal-dark">Update Your Profile</h2>
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="text-teal-dark" for="phonenum">Phone Number (format: xxxxx-xxxxx):</label><br/>
+                    <input id="phonenum" name="contact" type="tel" pattern="^\d{5}-\d{5}$" 
+                           class="form-control" value="{{ user_profile.contact if user_profile else '' }}">
+                </div>
+                <div class="mb-3">
+                    <label class="text-teal-dark">Email</label>
+                    <input type="email" name="email" class="form-control" 
+                           value="{{ user.email if user else '' }}" readonly>
+                </div>                
+                <div class="mb-3">
+                    <label class="text-teal-dark">Experience (years)</label>
+                    <input type="number" name="experience" class="form-control" 
+                           value="{{ user_profile.experience if user_profile else '' }}">
+                </div>
+                <div class="mb-3">
+                    <label class="text-teal-dark">Bio</label>
+                    <textarea name="bio" class="form-control" rows="4">{{ user_profile.bio if user_profile else '' }}</textarea>
+                </div>
+                <button type="submit" class="bg-teal-muted text-center text-offwhite btn w-100 mb-3">Update Profile</button>  
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

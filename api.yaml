@@ -1,0 +1,39 @@
+openapi: "3.0.0"
+info:
+  title: Safarnama API
+  version: "1.0"
+paths:
+  /api/treks:
+    get:
+      summary: Get all open treks
+      responses:
+        "200":
+          description: List of open treks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  treks:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        location:
+                          type: string
+                        difficulty:
+                          type: string
+                        available_slots:
+                          type: integer
+                        start_date:
+                          type: string
+                        end_date:
+                          type: string
+                        duration:
+                          type: integer
+                        description:
+                          type: string

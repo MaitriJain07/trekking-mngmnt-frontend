@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Safarnama{% endblock %}
+{% block content %}
+<section class="hero reveal" aria-labelledby="hero-heading">
+  <div class="hero-copy">
+    <p class="eyebrow"><span class="eyebrow-line"></span> Your next chapter begins outside</p>
+    <h1 id="hero-heading">Some journeys<br>change <em>everything.</em></h1>
+    <p class="hero-intro">Leave the noise behind. Find a trail worth taking, a view worth remembering, and a story that feels entirely yours.</p>
+    <div class="hero-buttons">
+      {% if not session.user_id %}
+        <a href="{{ url_for('main.register') }}" class="btn btn-primary">Start your safar <span aria-hidden="true">↗</span></a>
+        <a href="{{ url_for('main.login') }}" class="btn btn-outline-primary">Already a member?</a>
+      {% elif session['role'] == 'admin' %}
+        <a href="{{ url_for('main.admin_dashboard') }}" class="btn btn-primary">Go to dashboard <span aria-hidden="true">↗</span></a>
+      {% elif session['role'] == 'staff' %}
+        <a href="{{ url_for('main.staff_dashboard') }}" class="btn btn-primary">Go to dashboard <span aria-hidden="true">↗</span></a>
+      {% else %}
+        <a href="{{ url_for('main.browse_trek') }}" class="btn btn-primary">Explore treks <span aria-hidden="true">↗</span></a>
+        <a href="{{ url_for('main.trekker_dashboard') }}" class="btn btn-outline-primary">My dashboard</a>
+      {% endif %}
+    </div>
+    <div class="hero-note"><span class="hero-note-icon">✳</span><span>Curated treks · Real connections · A little more wonder</span></div>
+  </div>
+  <div class="hero-visual" role="img" aria-label="Illustration of mountain peaks beneath an open sky">
+    <img class="hero-art" src="{{ url_for('static', filename='images/mountains.png') }}" alt="">
+    <div class="hero-visual-top"><span>01 / THE OPEN ROAD</span><span>EST. FOR THE WANDERERS</span></div>
+    <div class="hero-visual-bottom"><span>Go where you feel alive.</span><span class="hero-compass" aria-hidden="true">✦</span></div>
+  </div>
+</section>
+<section class="home-steps reveal" aria-labelledby="steps-heading">
+  <div class="section-heading"><p class="eyebrow">The journey, simplified</p><h2 id="steps-heading">Less planning.<br><em>More living.</em></h2></div>
+  <div class="steps-grid">
+    <article><span class="step-number">01</span><h3>Find your trail</h3><p>Discover a trek that feels like it was made for you.</p></article>
+    <article><span class="step-number">02</span><h3>Save your spot</h3><p>Book in a few clicks and keep every detail close.</p></article>
+    <article><span class="step-number">03</span><h3>Take the first step</h3><p>Meet your guide, lace up, and let the story unfold.</p></article>
+  </div>
+</section>
+<div class="home-quote reveal"><span aria-hidden="true">✳</span> Kal pe sawaal hai — jeena filhal hai.</div>
+{% endblock %}

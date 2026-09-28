@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-6">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="page-heading reveal">
+                <h2 class="text-teal-dark m-0 me-3">Manage Trek</h2>
+                <div class="section-bar">
+                    <a href="{{ url_for('main.staff_trek_participants', trek_id=trek.id) }}" class="me-3 btn bg-ice text-teal-dark">
+                        View Participants
+                    </a>
+                    <a href="{{ url_for('main.staff_dashboard') }}" class="me-3 text-teal-muted">← Back to Dashboard</a>
+                </div>
+            </div>
+            
+            <!-- Trek Details -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center p-2">
+                        <h5 class="text-teal-dark">{{ trek.name }}</h5> 
+                        <span class="rounded badge bg-sage text-teal-dark me-3">{{ trek.status }}</span> 
+                    </div>
+                    <p class="text-teal-dark"><strong>Location:</strong> {{ trek.location }}</p>
+                    <p class="text-teal-dark"><strong>Dates:</strong> {{ trek.start_date.strftime('%d %b %Y') }} – {{ trek.end_date.strftime('%d %b %Y') }}</p>
+                    <p class="text-teal-dark"><strong>Total Slots:</strong> {{ trek.total_slots }} (Available: {{ trek.available_slots }})</p>
+                </div>
+            </div>
+
+            <!-- Update Slots -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h6 class="text-teal-dark">Update Total Slots</h6>
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="text-teal-dark">New Total Slots</label>
+                            <input type="number" name="total_slots" class="form-control" 
+                                   value="{{ trek.total_slots }}" required>
+                        </div>
+                        <button type="submit" class="bg-teal-muted text-center text-offwhite btn w-100 mb-3">
+                            Update Slots
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Toggle Booking Status -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h6 class="text-teal-dark">Manage Bookings</h6>
+                    {% if trek.status == 'open' %}
+                        <form method="POST" action="{{ url_for('main.toggle_trek_booking', trek_id=trek.id) }}" class="d-inline">
+                            <button type="submit" class="btn bg-sage text-teal-dark">Close Bookings</button>
+                        </form>
+                    {% elif trek.status == 'closed' %}
+                        <form method="POST" action="{{ url_for('main.toggle_trek_booking', trek_id=trek.id) }}" class="d-inline">
+                            <button type="submit" class="btn bg-sage text-teal-dark">Reopen Bookings</button>
+                        </form>
+                    {% else %}
+                        <span class="text-teal-dark">Booking not available for "{{ trek.status }}" status.</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Progress Trek -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h6 class="text-teal-dark">Progress Trek</h6>
+                    {% if trek.status == 'closed' %}
+                        <form method="POST" action="{{ url_for('main.progress_trek', trek_id=trek.id) }}" class="d-inline">
+                            <button type="submit" class="btn bg-teal-muted">Mark as Started</button>
+                        </form>
+                    {% elif trek.status == 'ongoing' %}
+                        <form method="POST" action="{{ url_for('main.progress_trek', trek_id=trek.id) }}" class="d-inline">
+                            <button type="submit" class="btn bg-teal-muted">Mark as Completed</button>
+                        </form>
+                    {% elif trek.status == 'completed' %}
+                        <span class="text-teal-dark">Trek completed</span>
+                    {% else %}
+                        <span class="text-teal-dark">Progress can only be started from 'closed' status.</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
